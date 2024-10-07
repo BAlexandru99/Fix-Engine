@@ -4,6 +4,8 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fixengine.fixengine.entity.FixMessage;
+import com.fixengine.fixengine.generator.FixMessageGenerator;
+import com.fixengine.fixengine.validator.FixMessageValidator;
 
 import lombok.NoArgsConstructor;
 
@@ -26,8 +28,11 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
 
         FixMessage fixMessage = FixMessage.parseFixMessage(payload);
 
-        String messageType = fixMessage.getField(35);
-
-        session.sendMessage(new TextMessage("Tip mesaj FIX primit: " + messageType));
+        if(FixMessageValidator.validateFixMessage(fixMessage)){
+            FixMessage response = FixMessageGenerator.generateExecutionReport(fixMessage);
+            session.sendMessage(new TextMessage(response.buildFixMessage()));
+        }else{
+            session.sendMessage(new TextMessage("Mesaj FIX invalid, lipsește un câmp obligatoriu."));
+        }
     }
 }
