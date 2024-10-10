@@ -5,19 +5,25 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fixengine.fixengine.entity.FixMessage;
 import com.fixengine.fixengine.generator.FixMessageGenerator;
+import com.fixengine.fixengine.handler.DMessage;
+import com.fixengine.fixengine.handler.FixHandler;
 import com.fixengine.fixengine.validator.FixMessageValidator;
 
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.boot.autoconfigure.jms.JmsProperties.Listener.Session;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 
 @Component
-@NoArgsConstructor
+@AllArgsConstructor
 
-public class MyWebSocketHandler extends TextWebSocketHandler {
 
+public class MyWebSocketHandler extends TextWebSocketHandler {;
+
+    FixHandler fixHandler;
 
     @Override
     public void handleTextMessage(WebSocketSession session , TextMessage message) throws Exception{
@@ -29,10 +35,10 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
         FixMessage fixMessage = FixMessage.parseFixMessage(payload);
 
         if(FixMessageValidator.validateFixMessage(fixMessage)){
-            FixMessage response = FixMessageGenerator.generateExecutionReport(fixMessage);
-            session.sendMessage(new TextMessage(response.buildFixMessage()));
+            FixMessage responseMessage = fixHandler.handleMessage(fixMessage);
+            session.sendMessage(new TextMessage(responseMessage.buildFixMessage()));
         }else{
-            session.sendMessage(new TextMessage("Mesaj FIX invalid, lipsește un câmp obligatoriu."));
+            session.sendMessage(new TextMessage("FIX message invalid, a required field is missing."));
         }
     }
 }
