@@ -7,6 +7,7 @@ import com.fixengine.fixengine.entity.FixMessage;
 import com.fixengine.fixengine.generator.FixMessageGenerator;
 import com.fixengine.fixengine.handler.DMessage;
 import com.fixengine.fixengine.handler.FixHandler;
+import com.fixengine.fixengine.store.storeMessage;
 import com.fixengine.fixengine.validator.FixMessageValidator;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ import org.springframework.web.socket.TextMessage;
 public class MyWebSocketHandler extends TextWebSocketHandler {;
 
     FixHandler fixHandler;
+    storeMessage storeMessage;
 
     @Override
     public void handleTextMessage(WebSocketSession session , TextMessage message) throws Exception{
@@ -31,12 +33,15 @@ public class MyWebSocketHandler extends TextWebSocketHandler {;
         String payload = message.getPayload();
 
         System.out.println(payload);
-
         FixMessage fixMessage = FixMessage.parseFixMessage(payload);
 
         if(FixMessageValidator.validateFixMessage(fixMessage)){
             FixMessage responseMessage = fixHandler.handleMessage(fixMessage);
-            session.sendMessage(new TextMessage(responseMessage.buildFixMessage()));
+            String response = responseMessage.buildFixMessage();
+            session.sendMessage(new TextMessage(response));
+            storeMessage.storeFixMessages(payload);
+            storeMessage.storeFixMessages(response);
+            
         }else{
             session.sendMessage(new TextMessage("FIX message invalid, a required field is missing."));
         }
