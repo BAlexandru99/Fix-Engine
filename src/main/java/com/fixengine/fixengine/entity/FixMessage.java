@@ -2,6 +2,7 @@ package com.fixengine.fixengine.entity;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class FixMessage {
     private  Map<Integer, String> fields = new LinkedHashMap<>(); 
@@ -52,4 +53,7 @@ public class FixMessage {
         int bodyLength = messageWithoutBodyLength.length();
         return String.valueOf(bodyLength);
     }
+    public Set<Integer> getTags() {
+        return fields.keySet();
+}
 }

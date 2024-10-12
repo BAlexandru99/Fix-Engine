@@ -13,15 +13,11 @@ public class DMessage implements FixHandler {
 
     @Override
     public FixMessage handleMessage(FixMessage message) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm");
-        LocalDateTime dateTime = LocalDateTime.now();
-        FixMessage response = FixMessageGenerator.createBaseMessage();
+        FixMessage response = FixMessageGenerator.createBaseMessage(message);
         if (message.getField(35).equals("D")) {
-            response.addField(35, "8"); // MsgType răspuns
-            response.addField(39, "2"); // OrdStatus: Filled
-            response.addField(34, "1"); // MsgSeqNum
-            response.addField(9, response.updateBodyLength()); // Calculăm și actualizăm BodyLength
-            response.addField(60, String.valueOf(LocalDateTime.now().format(formatter)));
+            response.addField(35, "8");
+            response.addField(39, "2");  
+           
         }
 
         return response;
