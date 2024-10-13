@@ -19,5 +19,10 @@ public class AMessage implements FixHandler {
        }
        return response;
     }
+
+    @Override
+    public String getMessageType() {
+        return "A";
+    }
     
 }

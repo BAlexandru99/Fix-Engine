@@ -9,5 +9,5 @@ import com.fixengine.fixengine.entity.FixMessage;
 public interface FixHandler {
 
     public FixMessage handleMessage(FixMessage message);
-    
+    public String getMessageType();
 }

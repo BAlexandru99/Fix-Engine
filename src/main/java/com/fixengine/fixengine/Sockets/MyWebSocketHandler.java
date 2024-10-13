@@ -7,6 +7,7 @@ import com.fixengine.fixengine.entity.FixMessage;
 import com.fixengine.fixengine.generator.FixMessageGenerator;
 import com.fixengine.fixengine.handler.DMessage;
 import com.fixengine.fixengine.handler.FixHandler;
+import com.fixengine.fixengine.router.FixHandlerRouter;
 import com.fixengine.fixengine.store.storeMessage;
 import com.fixengine.fixengine.validator.FixMessageValidator;
 
@@ -26,6 +27,7 @@ public class MyWebSocketHandler extends TextWebSocketHandler {;
 
     FixHandler fixHandler;
     storeMessage storeMessage;
+    FixHandlerRouter handlerRouter;
 
     @Override
     public void handleTextMessage(WebSocketSession session , TextMessage message) throws Exception{
@@ -36,9 +38,11 @@ public class MyWebSocketHandler extends TextWebSocketHandler {;
         FixMessage fixMessage = FixMessage.parseFixMessage(payload);
 
         if(FixMessageValidator.validateFixMessage(fixMessage)){
-            FixMessage responseMessage = fixHandler.handleMessage(fixMessage);
+            FixMessage responseMessage =  handlerRouter.routeMessage(fixMessage);
             String response = responseMessage.buildFixMessage();
+
             session.sendMessage(new TextMessage(response));
+            
             storeMessage.storeFixMessages(payload);
             storeMessage.storeFixMessages(response);
             

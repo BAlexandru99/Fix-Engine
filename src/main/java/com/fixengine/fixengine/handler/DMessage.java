@@ -17,9 +17,13 @@ public class DMessage implements FixHandler {
         if (message.getField(35).equals("D")) {
             response.addField(35, "8");
             response.addField(39, "2");  
-           
         }
 
         return response;
+    }
+
+    @Override
+    public String getMessageType() {
+        return "D";
     }
 }
