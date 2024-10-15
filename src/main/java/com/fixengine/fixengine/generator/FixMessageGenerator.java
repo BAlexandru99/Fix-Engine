@@ -1,9 +1,17 @@
 package com.fixengine.fixengine.generator;
 
+import java.io.IOException;
+import java.net.http.WebSocket;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+
 import com.fixengine.fixengine.entity.FixMessage;
+import com.fixengine.fixengine.handler.DMessage;
+import com.fixengine.fixengine.handler.FixHandler;
+
 
 public class FixMessageGenerator {
     
@@ -35,7 +43,7 @@ public class FixMessageGenerator {
             if (tag == 10) continue;
     
             String value = message.getField(tag);
-            sb.append(tag).append("=").append(value).append((char) 1); // Adaugă SOH (ASCII 1) ca delimitator
+            sb.append(tag).append("=").append(value).append((char) 1);
         }
     
         int sum = 0;
@@ -47,5 +55,23 @@ public class FixMessageGenerator {
     
         return String.format("%03d", checksumValue);
     }
-    
+
+    public static void startHeartbeat(WebSocketSession session, int heartBtInt) {
+    new Thread(() -> {
+        try {
+            while (true) {
+                Thread.sleep(heartBtInt * 1000);  // Așteaptă timpul specificat de HeartBtInt
+                
+                FixMessage heartbeat = new FixMessage();
+                heartbeat.addField(35, "0"); // Heartbeat
+                heartbeat.addField(52, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm:ss"))); // Setează timpul curent
+
+                String heartbeatResponse = heartbeat.buildFixMessage(); 
+                session.sendMessage(new TextMessage(heartbeatResponse));
+            }
+        } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
+    }).start();
+    }
 }

@@ -45,7 +45,7 @@ public class FixMessage {
     public String updateBodyLength() {
         StringBuilder messageWithoutBodyLength = new StringBuilder();
         for (Map.Entry<Integer, String> entry : fields.entrySet()) {
-            if (entry.getKey() != 9) { // Ignorăm tag-ul 9 pentru calcul
+            if (entry.getKey() != 9) { 
                 messageWithoutBodyLength.append(entry.getKey()).append("=").append(entry.getValue()).append("|");
             }
         }
