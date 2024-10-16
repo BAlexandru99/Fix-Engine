@@ -15,6 +15,10 @@ public class FixMessage {
         return fields.get(tag);
     }
 
+    public void removeField(int tag){
+        fields.remove(tag);
+    }
+
     public String buildFixMessage() {
         String bodyLengthValue = updateBodyLength();
         fields.put(9, bodyLengthValue); 
@@ -27,6 +31,7 @@ public class FixMessage {
 
         return message.toString();
     }
+
 
     public static FixMessage parseFixMessage(String fixMessage) {
         FixMessage message = new FixMessage();

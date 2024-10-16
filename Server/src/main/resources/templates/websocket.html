@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>WebSocket Heartbeat</title>
+    <script type="text/javascript">
+        var socket;
+
+        // Funcția de conectare la WebSocket
+        function connect() {
+            socket = new WebSocket("ws://localhost:8080/fix-endpoint");
+
+            // Eveniment apelat la deschiderea conexiunii
+            socket.onopen = function() {
+                console.log("Connected to server.");
+                startHeartbeat();
+            };
+
+            // Eveniment apelat când serverul trimite un mesaj
+            socket.onmessage = function(event) {
+                console.log("Received from server: " + event.data);
+            };
+
+            // Eveniment apelat la închiderea conexiunii
+            socket.onclose = function(event) {
+                console.log("Connection closed.");
+            };
+
+            // Eveniment apelat la eroare
+            socket.onerror = function(error) {
+                console.error("WebSocket Error: ", error);
+            };
+        }
+
+        // Funcția care trimite heartbeat la fiecare 30 de secunde
+        function startHeartbeat() {
+            setInterval(function() {
+                if (socket.readyState === WebSocket.OPEN) {
+                    const heartbeatMessage = "35=0|"; // Mesajul heartbeat
+                    socket.send(heartbeatMessage);
+                    console.log("Sent heartbeat: " + heartbeatMessage);
+                }
+            }, 30000);  // Trimite heartbeat la fiecare 30 secunde
+        }
+
+        // Apelăm funcția de conectare la încărcarea paginii
+        window.onload = connect;
+    </script>
+</head>
+<body>
+    <h1>WebSocket Heartbeat Example</h1>
+    <p>Heartbeat messages will be sent to the server every 30 seconds.</p>
+</body>
+</html>

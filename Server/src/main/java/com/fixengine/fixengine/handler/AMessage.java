@@ -16,7 +16,7 @@ public class AMessage implements FixHandler {
             response.addField(108, message.getField(108));
 
             int heartBtInt = Integer.parseInt(message.getField(108));
-            FixMessageGenerator.startHeartbeat(session, heartBtInt);
+            FixMessageGenerator.startHeartbeat(session, heartBtInt, message);
        }
        return response;
     }

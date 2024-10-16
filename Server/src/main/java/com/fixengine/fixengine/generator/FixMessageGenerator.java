@@ -23,10 +23,11 @@ public class FixMessageGenerator {
         respose.addField(8, "FIX.4.2");
         respose.addField(9, respose.updateBodyLength());
         respose.addField(35, "");
-        respose.addField(34, calculateSeqNum(message));
         respose.addField(49, message.getField(56));
-        respose.addField(52, String.valueOf(LocalDateTime.now().format(formatter)));
         respose.addField(56, message.getField(49));
+        respose.addField(34, calculateSeqNum(message));
+        respose.addField(52, String.valueOf(LocalDateTime.now().format(formatter)));
+        respose.addField(108, "");
         respose.addField(10, generateCheckSum(message));
         return respose;
     }
@@ -36,6 +37,7 @@ public class FixMessageGenerator {
         int responseValue = messageValue + 1;
         return String.valueOf(responseValue);
     }
+
 
     public static String generateCheckSum(FixMessage message){
         StringBuilder sb = new StringBuilder();
@@ -56,16 +58,15 @@ public class FixMessageGenerator {
         return String.format("%03d", checksumValue);
     }
 
-    public static void startHeartbeat(WebSocketSession session, int heartBtInt) {
+    public static void startHeartbeat(WebSocketSession session, int heartBtInt , FixMessage message) {
     new Thread(() -> {
         try {
             while (true) {
                 Thread.sleep(heartBtInt * 1000);  // Așteaptă timpul specificat de HeartBtInt
                 
-                FixMessage heartbeat = new FixMessage();
-                heartbeat.addField(35, "0"); // Heartbeat
-                heartbeat.addField(52, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm:ss"))); // Setează timpul curent
-
+                FixMessage heartbeat = createBaseMessage(message);
+                heartbeat.addField(35, "0");
+                heartbeat.removeField(108);
                 String heartbeatResponse = heartbeat.buildFixMessage(); 
                 session.sendMessage(new TextMessage(heartbeatResponse));
             }
