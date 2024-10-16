@@ -1,13 +1,21 @@
 package com.client;
 
-/**
- * Hello world!
- *
- */
-public class App 
+
+import javax.websocket.ContainerProvider;
+import javax.websocket.WebSocketContainer;
+import java.net.URI;
+
+
+public class App
 {
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+    public static void main(String[] args) {
+        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+        try {
+            URI uri = new URI("ws://localhost:8080/fix-endpoint");
+
+            container.connectToServer(WebSocket.class , uri);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
