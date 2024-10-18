@@ -29,7 +29,6 @@ public class WebSocket {
         executorService.scheduleAtFixedRate(() ->{
             try{
                 session.getBasicRemote().sendText("8=FIX.4.2|9=112|35=A|49=BuySide|56=SellSide|34=1|52=20241015-15:00:00|108=30|10=178|");
-
             }catch (IOException e){
                 e.printStackTrace();
             }
