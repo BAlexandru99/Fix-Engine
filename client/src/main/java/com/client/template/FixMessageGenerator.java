@@ -11,7 +11,7 @@ public class FixMessageGenerator {
 
     private int seqNum = 1;
     
-    public FixMessage generateMessage(FixMessage fixMessage){
+    public FixMessage generateMessage(){
         FixMessage message = new FixMessage();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm");
@@ -21,7 +21,7 @@ public class FixMessageGenerator {
         message.addField(9, "");
         message.addField(35, "");
         message.addField(49, "");
-        message.addField(56, "");
+        message.addField(56, "AXFix");
         message.addField(34, String.valueOf(seqNum));
         message.addField(52, String.valueOf(LocalDateTime.now().format(formatter)));
         message.addField(108, "");

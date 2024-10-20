@@ -7,27 +7,33 @@ import java.util.Map;
 
 public class FixMessage {
 
-    private Map<Integer, String> message;
+    private Map<Integer, String> fields = new LinkedHashMap<>(); 
 
-
-    public FixMessage(){
-        message = new LinkedHashMap<>();
-    }
 
     public void addField(int key , String value){
-        message.put(key, value);
+        fields.put(key, value);
     }
 
     public String getValue(int key){
-        return message.get(key);
+        return fields.get(key);
     }
 
     public Map<Integer,String> getMessage() {
-        return this.message;
+        return this.fields;
     }
 
     public void getMessage(Map<Integer,String> message) {
-        this.message = message;
+        this.fields = message;
     }
 
+    public String buildFixMessage() {
+
+        StringBuilder message = new StringBuilder();
+
+        for (Map.Entry<Integer, String> entry : fields.entrySet()) {
+            message.append(entry.getKey()).append("=").append(entry.getValue()).append("|");
+        }
+
+        return message.toString();
+    }
 }

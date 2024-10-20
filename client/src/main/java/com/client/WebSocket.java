@@ -1,7 +1,12 @@
 package com.client;
 
 import javax.websocket.*;
+
+import com.client.model.FixMessage;
+import com.client.template.FixMessageGenerator;
+
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -28,7 +33,7 @@ public class WebSocket {
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         executorService.scheduleAtFixedRate(() ->{
             try{
-                session.getBasicRemote().sendText("8=FIX.4.2|9=112|35=A|49=BuySide|56=SellSide|34=1|52=20241015-15:00:00|108=30|10=178|");
+                session.getBasicRemote().sendText(sendLogOn());
             }catch (IOException e){
                 e.printStackTrace();
             }
@@ -37,5 +42,23 @@ public class WebSocket {
     @OnClose
     public void onClose(Session session, CloseReason reason){
         System.out.println("Connection closed: " + reason);
+    }
+
+    public String sendLogOn(){
+        Scanner scan = new Scanner(System.in);
+
+        System.out.print("COMPANY: ");
+        String companyName = scan.nextLine();
+
+        FixMessageGenerator fixMessageGenerator = new FixMessageGenerator();
+
+        FixMessage message = fixMessageGenerator.generateMessage();
+
+        message.addField(35, "A");
+        message.addField(49, companyName);
+        message.addField(108, "30");
+
+        System.out.println(message.buildFixMessage());
+        return message.buildFixMessage();
     }
 }
