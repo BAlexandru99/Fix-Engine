@@ -13,17 +13,17 @@ import com.fixengine.fixengine.handler.FixHandler;
 @Component
 public class FixHandlerRouter {
     private final Map<String, FixHandler> handlerMap = new HashMap<>();
-    
-    public FixHandlerRouter(List<FixHandler> handlers){
+
+    public FixHandlerRouter(List<FixHandler> handlers) {
         for (FixHandler handler : handlers) {
             handlerMap.put(handler.getMessageType(), handler);
         }
     }
 
-    public FixMessage routeMessage(FixMessage message, WebSocketSession session){
+    public FixMessage routeMessage(FixMessage message, WebSocketSession session) {
         String msgType = message.getField(35);
         FixHandler handler = handlerMap.get(msgType);
-        if(handler != null){
+        if (handler != null) {
             return handler.handleMessage(message, session);
         } else {
             throw new IllegalArgumentException("No handler found for message type: " + msgType);

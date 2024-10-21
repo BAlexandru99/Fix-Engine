@@ -17,11 +17,10 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
 
     private final storeMessage storeMessage;
     private final FixHandlerRouter handlerRouter;
-    private final Object lock = new Object();  // Obiect pentru sincronizare
+    private final Object lock = new Object(); // Object for synchronization
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-
         String payload = message.getPayload();
         System.out.println(payload);
         FixMessage fixMessage = FixMessage.parseFixMessage(payload);
@@ -30,17 +29,16 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
             FixMessage responseMessage = handlerRouter.routeMessage(fixMessage, session);
             String response = responseMessage.buildFixMessage();
 
-            // Sincronizare pentru trimiterea mesajului
+            // Synchronization for sending the message
             synchronized (lock) {
                 session.sendMessage(new TextMessage(response));
             }
 
-            // Stocarea mesajelor trimise și primite
+            // Store sent and received messages
             storeMessage.storeFixMessages(payload);
             storeMessage.storeFixMessages(response);
-            
         } else {
-            // Sincronizare pentru trimiterea mesajului de eroare
+            // Synchronization for sending the error message
             synchronized (lock) {
                 session.sendMessage(new TextMessage("FIX message invalid, a required field is missing."));
             }

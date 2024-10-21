@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class FixMessage {
-    private  Map<Integer, String> fields = new LinkedHashMap<>(); 
+    private Map<Integer, String> fields = new LinkedHashMap<>();
 
     public void addField(int tag, String value) {
         fields.put(tag, value);
@@ -15,13 +15,13 @@ public class FixMessage {
         return fields.get(tag);
     }
 
-    public void removeField(int tag){
+    public void removeField(int tag) {
         fields.remove(tag);
     }
 
     public String buildFixMessage() {
         String bodyLengthValue = updateBodyLength();
-        fields.put(9, bodyLengthValue); 
+        fields.put(9, bodyLengthValue);
 
         StringBuilder message = new StringBuilder();
 
@@ -31,7 +31,6 @@ public class FixMessage {
 
         return message.toString();
     }
-
 
     public static FixMessage parseFixMessage(String fixMessage) {
         FixMessage message = new FixMessage();
@@ -50,7 +49,7 @@ public class FixMessage {
     public String updateBodyLength() {
         StringBuilder messageWithoutBodyLength = new StringBuilder();
         for (Map.Entry<Integer, String> entry : fields.entrySet()) {
-            if (entry.getKey() != 9) { 
+            if (entry.getKey() != 9) {
                 messageWithoutBodyLength.append(entry.getKey()).append("=").append(entry.getValue()).append("|");
             }
         }
@@ -58,7 +57,8 @@ public class FixMessage {
         int bodyLength = messageWithoutBodyLength.length();
         return String.valueOf(bodyLength);
     }
+
     public Set<Integer> getTags() {
         return fields.keySet();
-}
+    }
 }

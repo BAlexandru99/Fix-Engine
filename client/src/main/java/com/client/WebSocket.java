@@ -1,10 +1,8 @@
 package com.client;
 
 import javax.websocket.*;
-
 import com.client.model.FixMessage;
 import com.client.template.FixMessageGenerator;
-
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
@@ -15,50 +13,50 @@ import java.util.concurrent.TimeUnit;
 public class WebSocket {
     private Session session;
 
-    // Metoda care este apelata atunci când conexiunea este deschisa
     @OnOpen
-    public void onOpen(Session session){
+    public void onOpen(Session session) {
         this.session = session;
         System.out.println("Connected to the server.");
         startHeartBeat();
-
     }
+
     @OnMessage
     public void onMessage(String message) {
         System.out.println("Received from server: " + message);
+        // Optionally parse and process incoming messages here
     }
 
     private void startHeartBeat() {
-        //executor programabil cu un singur fir de execuție
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(() ->{
-            try{
-                session.getBasicRemote().sendText(sendLogOn());
-            }catch (IOException e){
-                e.printStackTrace();
+        executorService.scheduleAtFixedRate(() -> {
+            try {
+                String logonMessage = sendLogOn();
+                session.getBasicRemote().sendText(logonMessage);
+            } catch (IOException e) {
+                System.err.println("Error sending heartbeat: " + e.getMessage());
             }
-        },0 , 30, TimeUnit.SECONDS);
+        }, 0, 30, TimeUnit.SECONDS);
     }
+
     @OnClose
-    public void onClose(Session session, CloseReason reason){
+    public void onClose(Session session, CloseReason reason) {
         System.out.println("Connection closed: " + reason);
     }
 
-    public String sendLogOn(){
+    public String sendLogOn() {
         Scanner scan = new Scanner(System.in);
-
         System.out.print("COMPANY: ");
         String companyName = scan.nextLine();
 
         FixMessageGenerator fixMessageGenerator = new FixMessageGenerator();
-
         FixMessage message = fixMessageGenerator.generateMessage();
 
-        message.addField(35, "A");
-        message.addField(49, companyName);
-        message.addField(108, "30");
+        message.addField(35, "A"); // Logon message type
+        message.addField(49, companyName); // Sender Comp ID
+        message.addField(108, "30"); // Heartbeat interval
 
-        System.out.println(message.buildFixMessage());
-        return message.buildFixMessage();
+        String fixMessage = message.buildFixMessage();
+        System.out.println("Sending message: " + fixMessage);
+        return fixMessage;
     }
 }

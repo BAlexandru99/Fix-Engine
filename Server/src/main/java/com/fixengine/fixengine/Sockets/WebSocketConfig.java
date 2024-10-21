@@ -5,20 +5,19 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-import lombok.AllArgsConstructor;
-
-
-@EnableWebSocket
 @Configuration
-@AllArgsConstructor
-
+@EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
-    
-    MyWebSocketHandler socketHandler;
+
+    private final MyWebSocketHandler myWebSocketHandler;
+
+    public WebSocketConfig(MyWebSocketHandler myWebSocketHandler) {
+        this.myWebSocketHandler = myWebSocketHandler;
+    }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(socketHandler, "/fix-endpoint").setAllowedOriginPatterns("*");
+        registry.addHandler(myWebSocketHandler, "/fix")
+                .setAllowedOrigins("*");
     }
-    
 }
