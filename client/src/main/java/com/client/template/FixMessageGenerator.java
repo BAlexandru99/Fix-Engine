@@ -19,24 +19,13 @@ public class FixMessageGenerator {
         message.addField(56, "AXFix");
         message.addField(34, String.valueOf(seqNum++)); 
         message.addField(52, LocalDateTime.now().format(formatter)); 
-        message.addField(108, ""); 
+        message.addField(108, "30"); 
         message.addField(10, generateCheckSum(message)); 
-
-        int bodyLength = calculateBodyLength(message);
-        message.addField(9, String.valueOf(bodyLength)); 
 
         return message;
     }
 
-    private int calculateBodyLength(FixMessage message) {
-        StringBuilder body = new StringBuilder();
-        for (Map.Entry<Integer, String> entry : message.getMessage().entrySet()) {
-            if (entry.getKey() != 8 && entry.getKey() != 9 && entry.getKey() != 10) {
-                body.append(entry.getKey()).append("=").append(entry.getValue()).append("\u0001");
-            }
-        }
-        return body.length();
-    }
+    
 
     private String generateCheckSum(FixMessage message) {
         StringBuilder fullMessage = new StringBuilder();
@@ -50,5 +39,15 @@ public class FixMessageGenerator {
         }
 
         return String.format("%03d", sum % 256);
+    }
+    public int calculateBodyLength(FixMessage message) {
+        StringBuilder body = new StringBuilder();
+        for (Map.Entry<Integer, String> entry : message.getMessage().entrySet()) {
+            int tag = entry.getKey();
+            if (tag != 8 && tag != 9 && tag != 10) {  // Exclude tag-urile BeginString, BodyLength, CheckSum
+                body.append(tag).append("=").append(entry.getValue()).append("\u0001");
+            }
+        }
+        return body.length(); 
     }
 }

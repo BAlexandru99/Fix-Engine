@@ -22,7 +22,7 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
-        System.out.println(payload);
+        System.out.println("Received from the client: \n" + payload);
         FixMessage fixMessage = FixMessage.parseFixMessage(payload);
 
         if (FixMessageValidator.validateFixMessage(fixMessage)) {
@@ -32,11 +32,12 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
             // Synchronization for sending the message
             synchronized (lock) {
                 session.sendMessage(new TextMessage(response));
+                System.out.println("Sending message:  \n" + response);
             }
 
             // Store sent and received messages
-            storeMessage.storeFixMessages(payload);
-            storeMessage.storeFixMessages(response);
+            storeMessage.storeFixMessages("Received from client: " + payload);
+            storeMessage.storeFixMessages("Sent from the server: " + response);
         } else {
             // Synchronization for sending the error message
             synchronized (lock) {

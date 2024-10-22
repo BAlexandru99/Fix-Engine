@@ -48,12 +48,13 @@ public class FixMessage {
 
     public String updateBodyLength() {
         StringBuilder messageWithoutBodyLength = new StringBuilder();
+        
         for (Map.Entry<Integer, String> entry : fields.entrySet()) {
-            if (entry.getKey() != 9) {
-                messageWithoutBodyLength.append(entry.getKey()).append("=").append(entry.getValue()).append("|");
+            if (entry.getKey() != 8 && entry.getKey() != 9 && entry.getKey() != 10) {
+                messageWithoutBodyLength.append(entry.getKey()).append("=").append(entry.getValue()).append((char) 1); // SOH character
             }
         }
-
+    
         int bodyLength = messageWithoutBodyLength.length();
         return String.valueOf(bodyLength);
     }
