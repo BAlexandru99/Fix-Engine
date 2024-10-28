@@ -28,21 +28,13 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
         if (FixMessageValidator.validateFixMessage(fixMessage)) {
             FixMessage responseMessage = handlerRouter.routeMessage(fixMessage, session);
             String response = responseMessage.buildFixMessage();
-
-            // Synchronization for sending the message
-            synchronized (lock) {
-                session.sendMessage(new TextMessage(response));
-                System.out.println("Sending message:  \n" + response);
-            }
-
+            session.sendMessage(new TextMessage(response));
+            System.out.println("Sending message:  \n" + response);
             // Store sent and received messages
             storeMessage.storeFixMessages("Received from client: " + payload);
             storeMessage.storeFixMessages("Sent from the server: " + response);
-        } else {
-            // Synchronization for sending the error message
-            synchronized (lock) {
+        } else  {
                 session.sendMessage(new TextMessage("FIX message invalid, a required field is missing."));
-            }
         }
     }
 }

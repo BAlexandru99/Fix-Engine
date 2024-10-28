@@ -10,6 +10,10 @@ public class FixMessage {
         fields.put(key, value);
     }
 
+    public void removeField(int key){
+        fields.remove(key);
+    }
+
     public String getValue(int key) {
         return fields.get(key);
     }
