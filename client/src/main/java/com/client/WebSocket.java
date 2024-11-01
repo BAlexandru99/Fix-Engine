@@ -86,5 +86,20 @@ public class WebSocket {
         return fixMessage;
     }
 
+    public void sendMessage(String message) {
+        if (session != null && session.isOpen()) {
+            try {
+                session.getBasicRemote().sendText(message);
+                System.out.println("Sending message " + message);
+            } catch (IOException e) {
+                System.err.println("Failed to send message: " + e.getMessage());
+            }
+        } else {
+            System.out.println("Session is not open.");
+        }
+    }
 
+    public String returnTag49(){
+        return companyName;
+    }
 }
