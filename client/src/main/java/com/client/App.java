@@ -13,7 +13,7 @@ public class App
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         WebSocket webSocket = new WebSocket();
         try {
-            URI uri = new URI("ws://localhost:8080/fix");
+            URI uri = new URI("ws://192.168.1.106:8080/fix");
             container.connectToServer(webSocket , uri);
             FixOrderGUI gui = new FixOrderGUI(webSocket);
             gui.startGUI();
