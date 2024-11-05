@@ -8,6 +8,8 @@ import com.client.model.FixMessage;
 import com.client.template.FixMessageGenerator;
 
 import java.awt.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 public class FixOrderGUI extends JFrame {
@@ -159,19 +161,24 @@ public class FixOrderGUI extends JFrame {
         String timeInForce = timeInForceField.getText();
 
         FixMessageGenerator fixMessageGenerator = new FixMessageGenerator();
-        FixMessage fixMessage = message.generateMessage();
+        FixMessage fixMessage = new FixMessage();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm");
 
-        fixMessage.removeField(108);
-
+        fixMessage.addField(8, "FIX.4.2");
+        fixMessage.addField(9, "");
         fixMessage.addField(35, "D");
         fixMessage.addField(49, webSocket.returnTag49());
+        fixMessage.addField(56, "AXFix");
+        fixMessage.addField(52, LocalDateTime.now().format(formatter));
         fixMessage.addField(11, clOrdId);
-        fixMessage.addField(55, symbol);
+        
         fixMessage.addField(54, side);
+        fixMessage.addField(55, symbol);
         fixMessage.addField(38, orderQty);
         fixMessage.addField(34, ordType);
         fixMessage.addField(44, price);
         fixMessage.addField(58, timeInForce);
+        fixMessage.addField(10, fixMessageGenerator.generateCheckSum(fixMessage));
 
         int bodyLength = fixMessageGenerator.calculateBodyLength(fixMessage);
         fixMessage.addField(9, String.valueOf(bodyLength));

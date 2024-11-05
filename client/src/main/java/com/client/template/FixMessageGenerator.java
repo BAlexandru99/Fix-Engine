@@ -6,11 +6,12 @@ import java.util.Map;
 import com.client.model.FixMessage;
 
 public class FixMessageGenerator {
-    private int seqNum = 1;
+   
 
     public FixMessage generateMessage() {
         FixMessage message = new FixMessage();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm");
+        int seqNum = 1;
 
         message.addField(8, "FIX.4.2");
         message.addField(9, ""); 
@@ -25,9 +26,8 @@ public class FixMessageGenerator {
         return message;
     }
 
-    
 
-    private String generateCheckSum(FixMessage message) {
+    public String generateCheckSum(FixMessage message) {
         StringBuilder fullMessage = new StringBuilder();
         for (Map.Entry<Integer, String> entry : message.getMessage().entrySet()) {
             fullMessage.append(entry.getKey()).append("=").append(entry.getValue()).append("\u0001");
