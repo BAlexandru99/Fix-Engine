@@ -13,6 +13,7 @@ public class WebSocket {
     private Session session;
     private String companyName;
     private boolean logonSent = false;
+    private int seqNum = 0;
 
     @OnOpen
     public void onOpen(Session session) {
@@ -59,7 +60,8 @@ public class WebSocket {
     public String sendLogOn(String companyName) {
 
         FixMessageGenerator fixMessageGenerator = new FixMessageGenerator();
-        FixMessage message = fixMessageGenerator.generateMessage();
+        seqNum++;
+        FixMessage message = fixMessageGenerator.generateMessage(seqNum);
     
 
         message.addField(35, "A"); 
@@ -76,7 +78,8 @@ public class WebSocket {
 
     public String heartBeat(String companyName){
         FixMessageGenerator fixMessageGenerator = new FixMessageGenerator();
-        FixMessage message = fixMessageGenerator.generateMessage();
+        this.seqNum = this.seqNum + 2;
+        FixMessage message = fixMessageGenerator.generateMessage(seqNum);
         message.addField(35, "0");
         message.addField(49, companyName);
         int bodyLength = fixMessageGenerator.calculateBodyLength(message);

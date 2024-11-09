@@ -1,12 +1,6 @@
 package com.fixengine.fixengine.generator;
-
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
-
 import com.fixengine.fixengine.entity.FixMessage;
 
 public class FixMessageGenerator {
@@ -51,23 +45,5 @@ public class FixMessageGenerator {
         int checksumValue = sum % 256;
 
         return String.format("%03d", checksumValue);
-    }
-
-    public static void startHeartbeat(WebSocketSession session, int heartBtInt, FixMessage message) {
-        new Thread(() -> {
-            try {
-                while (true) {
-                    Thread.sleep(heartBtInt * 1000); // Wait for the specified HeartBtInt time
-
-                    FixMessage heartbeat = createBaseMessage(message);
-                    heartbeat.addField(35, "0");
-                    heartbeat.removeField(108);
-                    String heartbeatResponse = heartbeat.buildFixMessage();
-                    session.sendMessage(new TextMessage(heartbeatResponse));
-                }
-            } catch (InterruptedException | IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
     }
 }

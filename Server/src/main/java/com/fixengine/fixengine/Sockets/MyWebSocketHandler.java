@@ -17,7 +17,6 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
 
     private final storeMessage storeMessage;
     private final FixHandlerRouter handlerRouter;
-    private final Object lock = new Object(); // Object for synchronization
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {

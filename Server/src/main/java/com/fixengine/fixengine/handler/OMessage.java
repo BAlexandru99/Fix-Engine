@@ -13,10 +13,7 @@ public class OMessage implements FixHandler {
     public FixMessage handleMessage(FixMessage message, WebSocketSession session) {
        FixMessage heartBeatMessage = FixMessageGenerator.createBaseMessage(message);
        heartBeatMessage.addField(35, "0");
-       int heartBtInt = 30;
-       heartBeatMessage.addField(108, String.valueOf(heartBtInt));
-       FixMessageGenerator.startHeartbeat(session, heartBtInt ,  heartBeatMessage);
-        
+        heartBeatMessage.removeField(108);        
        return heartBeatMessage; 
     }
 

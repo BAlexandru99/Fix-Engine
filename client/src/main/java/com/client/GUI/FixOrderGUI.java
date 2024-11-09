@@ -171,11 +171,11 @@ public class FixOrderGUI extends JFrame {
         fixMessage.addField(56, "AXFix");
         fixMessage.addField(52, LocalDateTime.now().format(formatter));
         fixMessage.addField(11, clOrdId);
-        
+        fixMessage.addField(34, "");
         fixMessage.addField(54, side);
         fixMessage.addField(55, symbol);
         fixMessage.addField(38, orderQty);
-        fixMessage.addField(34, ordType);
+        fixMessage.addField(40, ordType);
         fixMessage.addField(44, price);
         fixMessage.addField(58, timeInForce);
         fixMessage.addField(10, fixMessageGenerator.generateCheckSum(fixMessage));

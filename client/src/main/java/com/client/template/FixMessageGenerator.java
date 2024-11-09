@@ -8,19 +8,17 @@ import com.client.model.FixMessage;
 public class FixMessageGenerator {
    
 
-    public FixMessage generateMessage() {
+    public FixMessage generateMessage(int seqNum) {
         FixMessage message = new FixMessage();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm");
-        int seqNum = 1;
 
         message.addField(8, "FIX.4.2");
         message.addField(9, ""); 
         message.addField(35, ""); 
         message.addField(49, ""); 
         message.addField(56, "AXFix");
-        message.addField(34, String.valueOf(seqNum++)); 
-        message.addField(52, LocalDateTime.now().format(formatter)); 
-        message.addField(108, "30"); 
+        message.addField(34, String.valueOf(seqNum)); 
+        message.addField(52, LocalDateTime.now().format(formatter));  
         message.addField(10, generateCheckSum(message)); 
 
         return message;
