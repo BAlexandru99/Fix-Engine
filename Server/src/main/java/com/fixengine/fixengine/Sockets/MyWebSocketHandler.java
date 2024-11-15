@@ -26,6 +26,7 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
 
         if (FixMessageValidator.validateFixMessage(fixMessage)) {
             FixMessage responseMessage = handlerRouter.routeMessage(fixMessage, session);
+            storeMessage.setName(responseMessage.getField(56));
             String response = responseMessage.buildFixMessage();
             session.sendMessage(new TextMessage(response));
             System.out.println("Sending message:  \n" + response);
