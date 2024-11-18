@@ -105,4 +105,8 @@ public class WebSocket {
     public String returnTag49(){
         return companyName;
     }
+
+    public int returnTag34(){
+        return this.seqNum;
+    }
 }

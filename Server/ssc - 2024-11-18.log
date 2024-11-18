@@ -1,0 +1,8 @@
+Received from client: 8=FIX.4.2|9=51|35=A|49=ssc|56=AXFix|34=1|52=20241118-21:42|10=142|108=30|
+Sent from the server: 8=FIX.4.2|9=51|35=A|49=AXFix|56=ssc|34=2|52=20241118-21:42|108=30|10=184|
+Received from client: 8=FIX.4.2|9=51|35=A|49=ssc|56=AXFix|34=1|52=20241118-22:25|10=144|108=30|
+Sent from the server: 8=FIX.4.2|9=51|35=A|49=AXFix|56=ssc|34=2|52=20241118-22:25|108=30|10=186|
+Received from client: 8=FIX.4.2|9=51|35=A|49=ssc|56=AXFix|34=1|52=20241118-22:26|10=145|108=30|
+Sent from the server: 8=FIX.4.2|9=51|35=A|49=AXFix|56=ssc|34=2|52=20241118-22:26|108=30|10=187|
+Received from client: 8=FIX.4.2|9=51|35=A|49=ssc|56=AXFix|34=1|52=20241118-22:31|10=141|108=30|
+Sent from the server: 8=FIX.4.2|9=51|35=A|49=AXFix|56=ssc|34=2|52=20241118-22:31|108=30|10=183|

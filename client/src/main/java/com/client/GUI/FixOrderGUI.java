@@ -22,6 +22,7 @@ public class FixOrderGUI extends JFrame {
     private JTextField priceField;
     private JTextField timeInForceField;
     private JLabel statusLabel;
+    private JTextField deliverToCompIDField;
 
     private WebSocket webSocket;
     private FixMessageGenerator message;
@@ -80,6 +81,10 @@ public class FixOrderGUI extends JFrame {
         priceField = createRoundedTextField(fieldColor);
         inputPanel.add(priceField);
 
+        inputPanel.add(new JLabel("DeliverToCompID (Tag 128):"));
+        deliverToCompIDField = createRoundedTextField(fieldColor);
+        inputPanel.add(deliverToCompIDField);
+
         inputPanel.add(new JLabel("TimeInForce (0=Day):"));
         timeInForceField = createRoundedTextField(fieldColor);
         inputPanel.add(timeInForceField);
@@ -109,6 +114,7 @@ public class FixOrderGUI extends JFrame {
             ordTypeField.setText("");
             priceField.setText("");
             timeInForceField.setText("");
+            deliverToCompIDField.setText("");
         });
 
         setVisible(true);
@@ -159,6 +165,7 @@ public class FixOrderGUI extends JFrame {
         String ordType = ordTypeField.getText();
         String price = priceField.getText();
         String timeInForce = timeInForceField.getText();
+        String deliverToCompID = deliverToCompIDField.getText();
 
         FixMessageGenerator fixMessageGenerator = new FixMessageGenerator();
         FixMessage fixMessage = new FixMessage();
@@ -171,13 +178,14 @@ public class FixOrderGUI extends JFrame {
         fixMessage.addField(56, "AXFix");
         fixMessage.addField(52, LocalDateTime.now().format(formatter));
         fixMessage.addField(11, clOrdId);
-        fixMessage.addField(34, "");
+        fixMessage.addField(34, String.valueOf(webSocket.returnTag34()));
         fixMessage.addField(54, side);
         fixMessage.addField(55, symbol);
         fixMessage.addField(38, orderQty);
         fixMessage.addField(40, ordType);
         fixMessage.addField(44, price);
         fixMessage.addField(58, timeInForce);
+        fixMessage.addField(128, deliverToCompID);
         fixMessage.addField(10, fixMessageGenerator.generateCheckSum(fixMessage));
 
         int bodyLength = fixMessageGenerator.calculateBodyLength(fixMessage);
