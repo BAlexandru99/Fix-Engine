@@ -167,6 +167,8 @@ public class FixOrderGUI extends JFrame {
         String timeInForce = timeInForceField.getText();
         String deliverToCompID = deliverToCompIDField.getText();
 
+        int seqNum = webSocket.returnTag34() + 1;
+
         FixMessageGenerator fixMessageGenerator = new FixMessageGenerator();
         FixMessage fixMessage = new FixMessage();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HH:mm");
@@ -178,7 +180,7 @@ public class FixOrderGUI extends JFrame {
         fixMessage.addField(56, "AXFix");
         fixMessage.addField(52, LocalDateTime.now().format(formatter));
         fixMessage.addField(11, clOrdId);
-        fixMessage.addField(34, String.valueOf(webSocket.returnTag34()));
+        fixMessage.addField(34, String.valueOf(seqNum));
         fixMessage.addField(54, side);
         fixMessage.addField(55, symbol);
         fixMessage.addField(38, orderQty);

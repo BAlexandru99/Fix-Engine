@@ -28,6 +28,7 @@ public class WebSocket {
     @OnMessage
     public void onMessage(String message) {
         System.out.println("Received from server: " + message);
+        this.seqNum++;
         if(message.contains("35=A")){
             System.out.println("Connection establish!");
         }
@@ -78,7 +79,7 @@ public class WebSocket {
 
     public String heartBeat(String companyName){
         FixMessageGenerator fixMessageGenerator = new FixMessageGenerator();
-        this.seqNum = this.seqNum + 2;
+        this.seqNum++;
         FixMessage message = fixMessageGenerator.generateMessage(seqNum);
         message.addField(35, "0");
         message.addField(49, companyName);
@@ -103,6 +104,7 @@ public class WebSocket {
     }
 
     public String returnTag49(){
+        this.seqNum++;
         return companyName;
     }
 
