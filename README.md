@@ -29,7 +29,7 @@ A work-in-progress FIX (Financial Information Exchange) protocol engine built wi
 ### Usage
 
 - Configure your client to connect to the server’s IP and port.
-- Supports basic FIX protocol messages (logon, heartbeat, logout).
+- Supports basic FIX protocol messages (logon, heartbeat).
 
 ### Notes
 
